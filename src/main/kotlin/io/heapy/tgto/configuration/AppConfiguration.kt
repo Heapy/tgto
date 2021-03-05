@@ -24,7 +24,7 @@ interface AppConfiguration {
 class DefaultAppConfiguration(
     override val token: String = env.get("TGTO_BOT_TOKEN"),
     override val baseUrl: String = env.getOrNull("TGTO_BASE_URL") ?: "http://localhost:8080",
-    override val ds: DataSourceConfiguration = DefaultDataSourceConfiguration()
+    override val ds: DataSourceConfiguration = DefaultDataSourceConfiguration(),
 ) : AppConfiguration
 
 /**
@@ -45,7 +45,7 @@ interface DataSourceConfiguration {
  * @author Ruslan Ibragimov
  */
 class DefaultDataSourceConfiguration(
-    override val url: String = "jdbc:postgresql://tgto_database:5432/tgto",
+    override val url: String = env.getOrNull("TGTO_JDBC_URL") ?: "jdbc:postgresql://tgto_database:5432/tgto",
     override val username: String = "tgto",
     override val password: String = "tgto",
     override val driverClassName: String = "org.postgresql.Driver"

@@ -8,7 +8,7 @@ const val komodoConcurrent = "io.heapy.komodo:komodo-core-concurrent:$komodoVers
 const val komodoDotenv = "io.heapy.komodo:komodo-config-dotenv:$komodoVersion"
 
 const val telegrambots = "org.telegram:telegrambots:5.0.1.1"
-const val undertow = "io.undertow:undertow-core:2.0.20.Final"
+const val undertow = "io.undertow:undertow-core:2.2.4.Final"
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3"
 const val rome = "com.rometools:rome:1.12.0"
 const val commonmark = "com.atlassian.commonmark:commonmark:0.12.1"
