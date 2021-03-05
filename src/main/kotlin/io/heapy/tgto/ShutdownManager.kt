@@ -1,6 +1,5 @@
 package io.heapy.tgto
 
-import io.heapy.integration.logging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking

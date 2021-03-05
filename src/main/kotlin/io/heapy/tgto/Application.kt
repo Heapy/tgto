@@ -1,6 +1,5 @@
 package io.heapy.tgto
 
-import io.heapy.integration.logging.logger
 import io.heapy.tgto.commands.MyUrlCommand
 import io.heapy.tgto.commands.NewUrlCommand
 import io.heapy.tgto.commands.PingPongCommand
@@ -14,11 +13,14 @@ import io.heapy.tgto.db.tables.daos.TgUserDao
 import io.heapy.tgto.server.UndertowFeedServer
 import io.heapy.tgto.services.CommonMarkMarkdownService
 import io.heapy.tgto.services.DefaultJooqConfigFactory
-import io.heapy.tgto.services.FlywayDatabaseMigrate
 import io.heapy.tgto.services.HikariDataSourceFactory
 import io.heapy.tgto.services.RomeFeedBuilder
-import org.telegram.telegrambots.ApiContextInitializer
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.meta.TelegramBotsApi
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
+
+inline fun <reified T : Any> logger(): Logger = LoggerFactory.getLogger(T::class.java)
 
 /**
  * Entry point of bot.
@@ -26,11 +28,6 @@ import org.telegram.telegrambots.meta.TelegramBotsApi
  * @author Ruslan Ibragimov
  */
 object Application {
-    init {
-        // Ugh, telegram bot library
-        ApiContextInitializer.init()
-    }
-
     @JvmStatic
     fun main(args: Array<String>) {
         try {
@@ -41,8 +38,6 @@ object Application {
                 appConfiguration,
                 shutdownManager
             ).dataSource()
-
-            FlywayDatabaseMigrate(dataSource).migrate()
 
             val jooqConfig = DefaultJooqConfigFactory(dataSource).config()
 
@@ -74,7 +69,9 @@ object Application {
                 shutdownManager = shutdownManager
             )
 
-            val botSession = TelegramBotsApi().registerBot(tgBot)
+
+            val botSession = TelegramBotsApi(DefaultBotSession::class.java)
+                .registerBot(tgBot)
             shutdownManager.onShutdown { botSession.stop() }
 
             LOGGER.info("Bot started.")

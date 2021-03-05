@@ -1,55 +1,49 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import Deps.jvmTarget
 
 plugins {
     application
-    kotlin("jvm").version(Deps.kotlinVersion)
+    kotlin("jvm").version(kotlinVersion)
 }
 
-tasks.withType<JavaCompile> {
+tasks.withType<JavaCompile>().configureEach {
     sourceCompatibility = jvmTarget
     targetCompatibility = jvmTarget
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = jvmTarget
 }
 
 application {
     applicationName = "tgto"
-    mainClassName = "io.heapy.tgto.Application"
+    mainClass.set("io.heapy.tgto.Application")
 }
 
 dependencies {
-    implementation(Deps.kotlinStdlib)
-    implementation(Deps.telegrambots)
-    implementation(Deps.undertow)
-    implementation(Deps.coroutines)
-    implementation(Deps.rome)
-    implementation(Deps.commonmark)
+    implementation(kotlinStdlib)
+    implementation(telegrambots)
+    implementation(undertow)
+    implementation(coroutines)
+    implementation(rome)
+    implementation(commonmark)
 
-    implementation(Deps.komodoConcurrent)
-    implementation(Deps.komodoDotenv)
-    implementation(Deps.komodoLogging)
-    implementation(Deps.komodoHikari)
+    implementation(komodoConcurrent)
+    implementation(komodoDotenv)
 
-    implementation(Deps.logback)
-    implementation(Deps.julSlf4j)
-    implementation(Deps.sentry)
+    implementation(logback)
+    implementation(julSlf4j)
 
-    implementation(Deps.hikari)
-    implementation(Deps.postgresql)
-    implementation(Deps.jooq)
-    implementation(Deps.jooqMeta)
-    implementation(Deps.jooqCodegen)
-    implementation(Deps.flyway)
+    implementation(hikari)
+    implementation(postgresql)
+    implementation(jooq)
+    implementation(jooqMeta)
 
-    testImplementation(Deps.junitApi)
-    testRuntimeOnly(Deps.junitEngine)
-    testImplementation(Deps.mockk)
+    testImplementation(junitApi)
+    testRuntimeOnly(junitEngine)
+    testImplementation(mockk)
 }
 
 repositories {
-    jcenter()
-    maven { url = uri("https://dl.bintray.com/heapy/heap-dev") }
+    mavenCentral()
+    maven { url = uri("https://repo.kotlin.link") }
 }

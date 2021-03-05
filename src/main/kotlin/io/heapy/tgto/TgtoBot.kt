@@ -21,7 +21,7 @@ class TgtoBot(
     private val shutdownManager: ShutdownManager
 ) : TelegramLongPollingBot() {
     override fun getBotToken() = appConfiguration.token
-    override fun getBotUsername() = appConfiguration.name
+    override fun getBotUsername() = "ToRssBot"
 
     override fun onUpdateReceived(update: Update) {
         if (shutdownManager.isShutdown) return
@@ -30,11 +30,11 @@ class TgtoBot(
             commandExecutor.onReceive(update).forEach { action ->
                 when (action) {
                     is SendMessageAction -> coExecute(SendMessage(
-                        action.chatId,
+                        action.chatId.toString(),
                         action.message
                     ))
                     is DeleteMessageAction -> coExecute(DeleteMessage(
-                        action.chatId,
+                        action.chatId.toString(),
                         action.messageId
                     ))
                 }
