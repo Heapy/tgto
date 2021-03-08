@@ -17,7 +17,7 @@ class DefaultCommandExecutor(
     private val commands: List<Command>,
     private val fallbackCommand: Command
 ) : CommandExecutor {
-    private val _commands = commands.associate { it.name to it }
+    private val _commands = commands.associateBy { it.name }
 
     override suspend fun onReceive(update: Update): List<TgAction> {
         // Updates comes with null `message`, but field `editedMessage`.

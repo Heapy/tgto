@@ -1,8 +1,7 @@
 package io.heapy.tgto
 
-import io.heapy.tgto.configuration.AppConfiguration
-import io.heapy.tgto.db.tables.pojos.Message
-import io.heapy.tgto.db.tables.pojos.TgUser
+import io.heapy.tgto.dao.MessageDTO
+import io.heapy.tgto.dao.UserDTO
 
 /**
  * Provides info like feed url for user.
@@ -10,18 +9,18 @@ import io.heapy.tgto.db.tables.pojos.TgUser
  * @author Ruslan Ibragimov
  */
 interface UserInfo {
-    fun getFeedUrl(user: TgUser): String
-    fun getFeedItemUrl(user: TgUser, message: Message): String
+    fun getFeedUrl(user: UserDTO): String
+    fun getFeedItemUrl(user: UserDTO, message: MessageDTO): String
 }
 
 class DefaultUserInfo(
     private val appConfiguration: AppConfiguration
 ) : UserInfo {
-    override fun getFeedUrl(user: TgUser): String {
+    override fun getFeedUrl(user: UserDTO): String {
         return "${appConfiguration.baseUrl}rss/${user.url}"
     }
 
-    override fun getFeedItemUrl(user: TgUser, message: Message): String {
+    override fun getFeedItemUrl(user: UserDTO, message: MessageDTO): String {
         return "${appConfiguration.baseUrl}rss/${user.url}/${message.id}"
     }
 }

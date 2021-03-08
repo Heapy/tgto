@@ -1,17 +1,18 @@
 package io.heapy.tgto.services
 
 import io.heapy.tgto.UserInfo
-import io.heapy.tgto.configuration.AppConfiguration
-import io.heapy.tgto.coroutines.elastic
-import io.heapy.tgto.dao.CMessageDao
-import io.heapy.tgto.db.tables.pojos.Message
-import io.heapy.tgto.db.tables.pojos.TgUser
+import io.heapy.tgto.dao.MessageDao
 import com.rometools.rome.feed.synd.SyndContentImpl
 import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.feed.synd.SyndEntryImpl
 import com.rometools.rome.feed.synd.SyndFeedImpl
 import com.rometools.rome.feed.synd.SyndImageImpl
 import com.rometools.rome.io.SyndFeedOutput
+import io.heapy.tgto.AppConfiguration
+import io.heapy.tgto.dao.MessageDTO
+import io.heapy.tgto.dao.UserDTO
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 import java.io.StringWriter
 import java.time.Instant
 import java.util.Date
@@ -22,17 +23,17 @@ import java.util.Date
  * @author Ruslan Ibragimov
  */
 interface FeedBuilder {
-    suspend fun feed(user: TgUser, limit: Int): String
+    suspend fun feed(user: UserDTO, limit: Int): String
 }
 
 class RomeFeedBuilder(
-    private val messageDao: CMessageDao,
+    private val messageDao: MessageDao,
     private val userInfo: UserInfo,
     private val configuration: AppConfiguration,
     private val markdownService: MarkdownService
 ) : FeedBuilder {
-    override suspend fun feed(user: TgUser, limit: Int): String = elastic {
-        val messages = messageDao.list(user.userId, limit)
+    override suspend fun feed(user: UserDTO, limit: Int): String = withContext(IO) {
+        val messages = messageDao.list(user.tgId, limit)
 
         val feed = SyndFeedImpl().apply {
             title = "ToRssBot"
@@ -57,14 +58,14 @@ class RomeFeedBuilder(
         }
     }
 
-    private suspend fun toSyndEntry(user: TgUser, message: Message): SyndEntry {
+    private suspend fun toSyndEntry(user: UserDTO, message: MessageDTO): SyndEntry {
         return SyndEntryImpl().apply {
-            title = message.message.lineSequence().first()
+            title = message.text.lineSequence().first()
             link = userInfo.getFeedItemUrl(user, message)
-            author = user.userId.toString()
+            author = user.tgId
             publishedDate = Date.from(message.created.toInstant())
             description = SyndContentImpl().also { content ->
-                content.value = markdownService.render(message.message)
+                content.value = markdownService.render(message.text)
             }
         }
     }

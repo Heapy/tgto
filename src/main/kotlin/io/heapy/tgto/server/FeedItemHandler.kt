@@ -1,61 +1,38 @@
 package io.heapy.tgto.server
 
-import io.heapy.tgto.coroutines.serverContext
-import io.heapy.tgto.dao.CMessageDao
-import io.heapy.tgto.dao.CUserDao
+import io.heapy.tgto.dao.MessageDao
 import io.heapy.tgto.services.MarkdownService
 import io.undertow.util.Headers
-import io.undertow.util.StatusCodes
 
 /**
  * Provides [CoroutinesHandler].
  *
  * @author Ruslan Ibragimov
  */
-interface FeedItemHandlerFactory {
-    fun handler(): CoroutinesHandler
-}
-
-class DefaultFeedItemHandlerFactory(
-    private val userDao: CUserDao,
-    private val messageDao: CMessageDao,
+class FeedItemHandlerFactory(
+    private val messageDao: MessageDao,
     private val markdownService: MarkdownService
-) : FeedHandlerFactory {
-    override fun handler() = CoroutinesHandler(serverContext) {
-        try {
-            val id = it.queryParameters["id"]?.poll()
-                ?: throw NotFoundException("Please check your url.")
-            val itemId = it.queryParameters["itemId"]?.poll()?.toLongOrNull()
-                ?: throw NotFoundException("Please check your url.")
-            val user = userDao.findByUrl(id)
-                ?: throw NotFoundException("Feed with this url not found.")
-            val message = messageDao.getById(itemId)
-                ?: throw NotFoundException("Message with this id not found.")
+) {
+    fun handler() = CoroutinesHandler {
+        val url = it.queryParameters["url"]?.poll()
+            ?: throw NotFoundException("Please check your url.")
+        val itemId = it.queryParameters["itemId"]?.poll()
+            ?: throw NotFoundException("Please check your url.")
+        val message = messageDao.getById(url, itemId)
+            ?: throw NotFoundException("Message with this id not found.")
 
-            // Sort of security
-            if (message.userId != user.userId) {
-                throw NotFoundException("Message with this id not found.")
-            }
-
-            it.responseHeaders.add(Headers.CONTENT_TYPE, "text/html")
-            it.responseSender.send("""
+        it.responseHeaders.add(Headers.CONTENT_TYPE, "text/html")
+        it.responseSender.send("""
             <html>
             <head>
             <meta charset="UTF-8">
               <title>Message: ${message.id}</title>
             </head>
             <body>
-              ${markdownService.render(message.message)}
+              ${markdownService.render(message.text)}
             </body>
             </html>
-            """.trimIndent())
-        } catch (e: NotFoundException) {
-            it.statusCode = StatusCodes.NOT_FOUND
-            it.responseSender.send(e.message)
-        }
+            """.trimIndent()
+        )
     }
-
-    // Yes, control flow with exceptions,
-    // too lazy to use CoroutinesHandlerWrapper
-    class NotFoundException(message: String) : RuntimeException(message)
 }

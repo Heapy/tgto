@@ -2,9 +2,9 @@ package io.heapy.tgto.commands
 
 import io.heapy.tgto.UniquePathGenerator
 import io.heapy.tgto.UserInfo
-import io.heapy.tgto.dao.CUserDao
-import io.heapy.tgto.db.tables.pojos.TgUser
-import io.heapy.tgto.logger
+import io.heapy.tgto.dao.UserDao
+import io.heapy.tgto.dao.UserDTO
+import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.meta.api.objects.Update
 
 /**
@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * @author Ruslan Ibragimov
  */
 class StartCommand(
-    private val userDao: CUserDao,
+    private val userDao: UserDao,
     private val pathGenerator: UniquePathGenerator,
     private val userInfo: UserInfo
 ) : Command {
@@ -22,12 +22,13 @@ class StartCommand(
     override suspend fun handler(update: Update): List<TgAction> {
         LOGGER.info("""User "${update.message.from.userName}" join.""")
 
-        val userId = update.message.from.id.toLong()
+        val tgId = update.message.from.id.toString()
 
-        val user = userDao.findByUserId(userId) ?: run {
-            TgUser().also {
-                it.url = pathGenerator.get()
-                it.userId = userId
+        val user = userDao.findByUserId(tgId) ?: run {
+            UserDTO(
+                url = pathGenerator.get(),
+                tgId = tgId,
+            ).also {
                 userDao.create(it)
             }
         }
@@ -45,6 +46,6 @@ class StartCommand(
     }
 
     companion object {
-        private val LOGGER = logger<StartCommand>()
+        private val LOGGER = LoggerFactory.getLogger(StartCommand::class.java)
     }
 }

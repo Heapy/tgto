@@ -26,9 +26,7 @@ dependencies {
     implementation(coroutines)
     implementation(rome)
     implementation(commonmark)
-
-    implementation(komodoConcurrent)
-    implementation(komodoDotenv)
+    implementation(xodus)
 
     implementation(logback)
     implementation(julSlf4j)
@@ -45,5 +43,4 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://repo.kotlin.link") }
 }

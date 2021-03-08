@@ -2,9 +2,7 @@ package io.heapy.tgto
 
 import io.heapy.tgto.commands.DeleteMessageAction
 import io.heapy.tgto.commands.SendMessageAction
-import io.heapy.tgto.configuration.AppConfiguration
-import io.heapy.tgto.coroutines.coExecute
-import io.heapy.tgto.coroutines.serverContext
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
@@ -18,22 +16,19 @@ import org.telegram.telegrambots.meta.api.objects.Update
 class TgtoBot(
     private val appConfiguration: AppConfiguration,
     private val commandExecutor: CommandExecutor,
-    private val shutdownManager: ShutdownManager
 ) : TelegramLongPollingBot() {
     override fun getBotToken() = appConfiguration.token
     override fun getBotUsername() = "ToRssBot"
 
     override fun onUpdateReceived(update: Update) {
-        if (shutdownManager.isShutdown) return
-
-        GlobalScope.launch(serverContext) {
+        GlobalScope.launch(IO) {
             commandExecutor.onReceive(update).forEach { action ->
                 when (action) {
-                    is SendMessageAction -> coExecute(SendMessage(
+                    is SendMessageAction -> execute(SendMessage(
                         action.chatId.toString(),
                         action.message
                     ))
-                    is DeleteMessageAction -> coExecute(DeleteMessage(
+                    is DeleteMessageAction -> execute(DeleteMessage(
                         action.chatId.toString(),
                         action.messageId
                     ))

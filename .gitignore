@@ -7,5 +7,5 @@ out
 .gradle
 build
 
-# Configuration
-/devops/.env
+# Data
+.xodus-dnq-data
