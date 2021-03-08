@@ -34,7 +34,7 @@ fun migrate(store: TransientEntityStore) {
     }
     val messages = messageDao.findAll()
     messages.forEach { tgMessage ->
-        println("Migrating tgmessage: message=${tgMessage.message}, userId=${tgMessage.userId}")
+        println("Migrating tgmessage: message=${tgMessage.message.take(50)}, userId=${tgMessage.userId}")
         store.transactional {
             val message = XdMessage.new {
                 this.text = tgMessage.message
@@ -45,6 +45,8 @@ fun migrate(store: TransientEntityStore) {
                 .single().messages.add(message)
         }
     }
+
+    Thread.sleep(10000)
 
     println("Pg total messages: ${messages.size}")
     println("Pg total users: ${users.size}")
