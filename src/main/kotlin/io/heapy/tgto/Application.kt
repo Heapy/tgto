@@ -12,7 +12,6 @@ import io.heapy.tgto.dao.XdUser
 import io.heapy.tgto.dao.XdUserDao
 import io.heapy.tgto.server.UndertowFeedServer
 import io.heapy.tgto.services.CommonMarkMarkdownService
-import io.heapy.tgto.migrate.migrate
 import io.heapy.tgto.services.RomeFeedBuilder
 import kotlinx.dnq.XdModel
 import kotlinx.dnq.store.container.StaticStoreContainer
@@ -46,8 +45,6 @@ fun main() {
             environmentName = "db"
         )
         initMetaData(XdModel.hierarchy, xodusStore)
-
-        migrate(xodusStore)
 
         val messageDao = XdMessageDao(xodusStore)
         val userDao = XdUserDao(xodusStore)

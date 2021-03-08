@@ -13,11 +13,6 @@ const val xodus = "org.jetbrains.xodus:dnq:1.4.480"
 const val logback = "ch.qos.logback:logback-classic:1.2.3"
 const val julSlf4j = "org.slf4j:jul-to-slf4j:1.7.30"
 
-const val postgresql = "org.postgresql:postgresql:42.2.5"
-const val hikari = "com.zaxxer:HikariCP:3.3.1"
-const val jooq = "org.jooq:jooq:3.11.11"
-const val jooqMeta = "org.jooq:jooq-meta:3.11.11"
-
 private const val junitVersion = "5.7.1"
 const val junitApi = "org.junit.jupiter:junit-jupiter-api:$junitVersion"
 const val junitEngine = "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

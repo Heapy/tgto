@@ -31,11 +31,6 @@ dependencies {
     implementation(logback)
     implementation(julSlf4j)
 
-    implementation(hikari)
-    implementation(postgresql)
-    implementation(jooq)
-    implementation(jooqMeta)
-
     testImplementation(junitApi)
     testRuntimeOnly(junitEngine)
     testImplementation(mockk)
