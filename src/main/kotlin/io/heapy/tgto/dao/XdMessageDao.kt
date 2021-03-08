@@ -35,7 +35,7 @@ interface MessageDao {
 class XdMessage(entity: Entity) : XdEntity(entity) {
     companion object : XdNaturalEntityType<XdMessage>()
     var created by xdRequiredDateTimeProp()
-    var id by xdRequiredStringProp(unique = true)
+    var id by xdRequiredStringProp()
     var text by xdRequiredStringProp()
     var user: XdUser by xdParent(XdUser::messages)
 }

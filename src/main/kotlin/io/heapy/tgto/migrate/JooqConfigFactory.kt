@@ -8,6 +8,7 @@ import io.heapy.tgto.db.tables.daos.TgUserDao
 import jetbrains.exodus.database.TransientEntityStore
 import kotlinx.dnq.query.filter
 import kotlinx.dnq.query.single
+import kotlinx.dnq.query.size
 import org.joda.time.DateTime
 import org.jooq.Configuration
 import org.jooq.SQLDialect
@@ -21,7 +22,9 @@ fun migrate(store: TransientEntityStore) {
     val tgUserDao = TgUserDao(jooqConfig)
     val messageDao = MessageDao(jooqConfig)
 
-    tgUserDao.findAll().forEach { tgUser ->
+    val users = tgUserDao.findAll()
+    users.forEach { tgUser ->
+        println("Migrating tguser: url=${tgUser.url}, userId=${tgUser.userId}")
         store.transactional {
             XdUser.new {
                 this.url = tgUser.url
@@ -29,8 +32,9 @@ fun migrate(store: TransientEntityStore) {
             }
         }
     }
-
-    messageDao.findAll().forEach { tgMessage ->
+    val messages = messageDao.findAll()
+    messages.forEach { tgMessage ->
+        println("Migrating tgmessage: message=${tgMessage.message}, userId=${tgMessage.userId}")
         store.transactional {
             val message = XdMessage.new {
                 this.text = tgMessage.message
@@ -40,6 +44,13 @@ fun migrate(store: TransientEntityStore) {
             XdUser.filter { it.tgId.eq(tgMessage.userId.toString()) }
                 .single().messages.add(message)
         }
+    }
+
+    println("Pg total messages: ${messages.size}")
+    println("Pg total users: ${users.size}")
+    store.transactional(readonly = true) {
+        println("Xd total messages: ${XdMessage.all().size()}")
+        println("Xd total users: ${XdUser.all().size()}")
     }
 }
 
