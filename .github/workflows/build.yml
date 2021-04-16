@@ -37,7 +37,7 @@ jobs:
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.PACKAGES_GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: ${{ github.repository }}/bot
+          registry: ghcr.io
+          repository: heapy/tgto
           tag_with_sha: true
           tag_with_ref: true
