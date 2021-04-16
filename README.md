@@ -1,4 +1,4 @@
-# tgto [![Build Status](https://travis-ci.com/Heapy/tgto.svg?branch=master)](https://travis-ci.com/Heapy/tgto)
+# tgto [![Build](https://github.com/Heapy/tgto/actions/workflows/build.yml/badge.svg)](https://github.com/Heapy/tgto/actions/workflows/build.yml)
 
 Bot which create RSS(Atom) feed from messages send to him.
 
