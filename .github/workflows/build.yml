@@ -1,0 +1,43 @@
+name: "Build"
+on:
+  - "push"
+jobs:
+  build:
+    name: "Build on JDK ${{ matrix.jdk }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk:
+          - 11
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Set up JDK ${{ matrix.jdk }}"
+        uses: actions/setup-java@v2
+        with:
+          java-version: "${{ matrix.jdk }}"
+          distribution: "zulu"
+      - name: "Build with Gradle"
+        run: ./gradlew check installDist
+      - uses: actions/upload-artifact@main
+        with:
+          name: "Kotlin Application"
+          path: build/install/tgto
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@main
+        with:
+          name: "Kotlin Application"
+          path: build/install/tgto
+      - name: Build container image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.PACKAGES_GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}
+          tag_with_sha: true
+          tag_with_ref: true
