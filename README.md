@@ -4,7 +4,7 @@ Bot which create RSS(Atom) feed from messages send to him.
 
 ## Docker Image
 
-Project distributed as docker image, and available in [docker hub](https://hub.docker.com/r/heapy/tgto/).
+Project distributed as docker image, and available in [GitHub Container Registry](https://github.com/orgs/heapy/packages/container/package/tgto).
 
 ## Why?
 

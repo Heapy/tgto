@@ -33,7 +33,6 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: "Kotlin Application"
-          path: "build/distributions/tgto.tar"
       - name: "Untar files"
         run: tar -xvf build/distributions/tgto.tar -C build/install/tgto
       - name: Build container image
