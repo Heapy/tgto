@@ -35,7 +35,7 @@ jobs:
           name: "Kotlin Application"
           path: "build/distributions/"
       - name: "Untar files"
-        run: mkdir -p build/install/tgto && tar -xvf build/distributions/tgto.tar -C $_
+        run: mkdir -p build/install && tar -xvf build/distributions/tgto.tar -C $_
       - name: Build container image
         uses: docker/build-push-action@v1
         with:
