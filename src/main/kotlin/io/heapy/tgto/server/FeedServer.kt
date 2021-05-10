@@ -36,10 +36,12 @@ class UndertowFeedServer(
     override fun run() {
         val feedHandler = DefaultFeedHandlerFactory(userDao, feedBuilder).handler()
         val feedItemHandler = FeedItemHandlerFactory(messageDao, markdownService).handler()
+        val healthCheckHandler = HealthCheckHandler()
 
         val routingHandler = RoutingHandler().also {
             it.get("/rss/{url}", feedHandler)
             it.get("/rss/{url}/{itemId}", feedItemHandler)
+            it.get("/healthcheck", healthCheckHandler)
         }
 
         val rootHandler = ResourceHandler(

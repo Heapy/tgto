@@ -22,7 +22,7 @@ class SaveCommand(
         val messageDto = MessageDTO(
             id = message.messageId.toString(),
             text = message.text,
-            created = Date(message.date * 1000L),
+            created = message.date * 1000L,
             tgId = tgId,
         )
 

@@ -9,3 +9,4 @@ build
 
 # Data
 .xodus-dnq-data
+.mapdb

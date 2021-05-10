@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm").version(kotlinVersion)
+    kotlin("plugin.serialization").version(kotlinVersion)
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -12,6 +13,10 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = jvmTarget
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
 
 application {
@@ -27,6 +32,8 @@ dependencies {
     implementation(rome)
     implementation(commonmark)
     implementation(xodus)
+    implementation(mapdb)
+    implementation(kotlinxSerialization)
 
     implementation(logback)
     implementation(julSlf4j)

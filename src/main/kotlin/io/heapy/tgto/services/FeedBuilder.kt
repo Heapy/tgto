@@ -63,7 +63,7 @@ class RomeFeedBuilder(
             title = message.text.lineSequence().first()
             link = userInfo.getFeedItemUrl(user, message)
             author = user.tgId
-            publishedDate = Date.from(message.created.toInstant())
+            publishedDate = Date.from(Instant.ofEpochMilli(message.created))
             description = SyndContentImpl().also { content ->
                 content.value = markdownService.render(message.text)
             }
