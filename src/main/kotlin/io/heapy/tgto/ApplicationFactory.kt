@@ -78,8 +78,6 @@ open class ApplicationFactory {
 
     open fun start() {
         try {
-            migrate(userDao, messageDao)
-
             server.run()
 
             val botSession = TelegramBotsApi(DefaultBotSession::class.java)

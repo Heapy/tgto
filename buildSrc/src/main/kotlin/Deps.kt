@@ -8,7 +8,6 @@ const val undertow = "io.undertow:undertow-core:2.2.7.Final"
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3"
 const val rome = "com.rometools:rome:1.15.0"
 const val commonmark = "org.commonmark:commonmark:0.17.1"
-const val xodus = "org.jetbrains.xodus:dnq:1.4.480"
 const val mapdb = "org.mapdb:mapdb:3.0.8"
 const val kotlinxSerialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
 

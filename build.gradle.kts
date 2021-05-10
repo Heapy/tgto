@@ -31,7 +31,6 @@ dependencies {
     implementation(coroutines)
     implementation(rome)
     implementation(commonmark)
-    implementation(xodus)
     implementation(mapdb)
     implementation(kotlinxSerialization)
 
